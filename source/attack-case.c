@@ -51,7 +51,7 @@ int main(int argc, char * argv[])
 void
 rop_target()
 {
-    printf("success.\nROP function reached.\n");
+    printf("\x1b[31m Attack success.\nROP function reached. \x1b[0m\n");
     exit(0);
 }
 
@@ -79,16 +79,27 @@ Malicious(void * unsed, const void * src, size_t length)
                      );    
 
 
-    dasics_umaincall(" Try to get Secret data: %s, ret point: 0x%lx, ret_addr: 0x%lx \n", \
+
+    dasics_umaincall("\x1b[31m Steal Secret data: %s \x1b[0m\n", \
                      secret, \
-                     &((char *)src)[length + 32 + 8],
-                     *ret_addr, \
+                     0,
+                     0, \
                      0, \
                      0, \
                      MAINCALL_MAGIC, \
                      Umaincall_PRINT \
                      );    
-    dasics_umaincall(" Try to change return address of main to Rop: 0x%lx \n", \
+
+    dasics_umaincall("\x1b[31m Ret address in stack: 0x%lx, ret_addr: 0x%lx \x1b[0m\n", \
+                     &((char *)src)[length + 32 + 8], \
+                     *ret_addr,
+                     0, \
+                     0, \
+                     0, \
+                     MAINCALL_MAGIC, \
+                     Umaincall_PRINT \
+                     );
+    dasics_umaincall("\x1b[31m Try to tamper return address of main to Rop: 0x%lx \x1b[0m\n", \
                      (uint64_t)&rop_target + 8, \
                      0, \
                      0, \
