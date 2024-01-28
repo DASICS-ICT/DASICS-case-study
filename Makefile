@@ -35,7 +35,7 @@ clean:
 	make -C $(DIR_DASICS) clean
 
 
-attack-case: $(DIR_SRC)/attack-case.c
+attack-case: $(DIR_SRC)/attack-case.c $(DIR_DASICS_BUILD)
 	make -C $(DIR_DASICS)
 	mkdir -p $(DIR_BUILD)
 	$(CC) $(CFLAGS) $(DASICS_INCLUDE) \
