@@ -2,11 +2,13 @@
 #include <udasics.h>
 #include <uattr.h>
 #include <redirect.h>
+#include <string.h>
+#include <stdlib.h>
 
 void rop_target();
 void ATTR_UFREEZONE_TEXT Malicious(void * unsed, const void * src, size_t length);
 void ATTR_UFREEZONE_TEXT homebrew_memcpy(void * dst, const void * src, size_t length);
-
+void ATTR_ULIB_TEXT just_call_back();
 #define OLD_BP_PTR   __builtin_frame_address(0)
 #define RET_ADDR_PTR ((void **) OLD_BP_PTR - 1)
 
@@ -68,7 +70,7 @@ Malicious(void * unsed, const void * src, size_t length)
 
     uint64_t * ret_addr = (uint64_t *)(&private_buffer[length + 32 + 8]);
 
-    dasics_umaincall(" - - - - - - Malicious Call - - - - - - - -  \n", \
+    dasics_umaincall((uint64_t)" - - - - - - Malicious Call - - - - - - - -  \n", \
                      0, \
                      0, \
                      0, \
@@ -80,8 +82,8 @@ Malicious(void * unsed, const void * src, size_t length)
 
 
 
-    dasics_umaincall("\x1b[31m Steal Secret data: %s \x1b[0m\n", \
-                     secret, \
+    dasics_umaincall((uint64_t)"\x1b[31m Steal Secret data: %s \x1b[0m\n", \
+                     (uint64_t)secret, \
                      0,
                      0, \
                      0, \
@@ -90,16 +92,16 @@ Malicious(void * unsed, const void * src, size_t length)
                      Umaincall_PRINT \
                      );    
 
-    dasics_umaincall("\x1b[31m Ret address in stack: 0x%lx, ret_addr: 0x%lx \x1b[0m\n", \
-                     &((char *)src)[length + 32 + 8], \
-                     *ret_addr,
+    dasics_umaincall((uint64_t)"\x1b[31m Ret address in stack: 0x%lx, ret_addr: 0x%lx \x1b[0m\n", \
+                     (uint64_t)&((char *)src)[length + 32 + 8], \
+                     (uint64_t)*ret_addr,
                      0, \
                      0, \
                      0, \
                      MAINCALL_MAGIC, \
                      Umaincall_PRINT \
                      );
-    dasics_umaincall("\x1b[31m Try to tamper return address of main to Rop: 0x%lx \x1b[0m\n", \
+    dasics_umaincall((uint64_t)"\x1b[31m Try to tamper return address of main to Rop: 0x%lx \x1b[0m\n", \
                      (uint64_t)&rop_target + 8, \
                      0, \
                      0, \
@@ -112,7 +114,7 @@ Malicious(void * unsed, const void * src, size_t length)
     // Try to change ret address and do Rop attack
     ((uint64_t* )src)[(length + 32 + 8) / 8] = (uint64_t)&rop_target + 8;
 
-    dasics_umaincall(" - - - - - - Malicious Call End- - - - - - - -  \n", \
+    dasics_umaincall((uint64_t)" - - - - - - Malicious Call End- - - - - - - -  \n", \
                      0, \
                      0, \
                      0, \
@@ -139,4 +141,10 @@ homebrew_memcpy(void * dst, const void * src, size_t length)
     while (length--) {
         *d++ = *s++;
     }
+}
+
+void ATTR_ULIB_TEXT __attribute__((unused))
+just_call_back() 
+{
+    return;
 }
