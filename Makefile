@@ -1,7 +1,7 @@
 # The gcc and flags
 CFLAGS 			= -fno-stack-protector -O0 -g -static
 CC_PREFIX_LINUX = riscv64-unknown-linux-gnu-
-CC 				= $(CC_PREFIX_LINUX)clang
+CC 				= $(CC_PREFIX_LINUX)gcc
 OBJDUMP			= $(CC_PREFIX_LINUX)objdump
 
 CCVERSION 		= $(shell $(CC_PREFIX_LINUX)-gcc --version | grep ^$(CC_PREFIX_LINUX)-gcc | sed 's/^.* //g')
